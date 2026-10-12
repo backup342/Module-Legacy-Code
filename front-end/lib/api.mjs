@@ -15,7 +15,7 @@ import {handleErrorDialog} from "../components/error.mjs";
 // Helper function for making API requests
 async function _apiRequest(endpoint, options = {}) {
   const token = state.token;
-  const baseUrl = "http://localhost:3000";
+  const baseUrl = "https://verbose-couscous-wwgrrr5g7gwhgp9v-3000.app.github.dev";
 
   const defaultOptions = {
     headers: {
