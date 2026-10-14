@@ -1,3 +1,4 @@
+
 from typing import Dict, Union
 from data import blooms
 from data.follows import follow, get_followed_usernames, get_inverse_followed_usernames
@@ -18,6 +19,7 @@ from flask_jwt_extended import (
 from datetime import timedelta
 
 MINIMUM_PASSWORD_LENGTH = 5
+MAXIMUM_BLOOM_LENGTH = 280
 
 
 def login():
@@ -156,9 +158,22 @@ def send_bloom():
     if type_check_error is not None:
         return type_check_error
 
-    user = get_current_user()
+    content = request.json["content"]
 
-    blooms.add_bloom(sender=user, content=request.json["content"])
+    if len(content) > MAXIMUM_BLOOM_LENGTH:
+        return make_response(
+            {
+                "success": False,
+                "message": (
+                    f"Bloom must be {MAXIMUM_BLOOM_LENGTH} "
+                    "characters or fewer"
+                ),
+            },
+            400,
+        )
+
+    user = get_current_user()
+    blooms.add_bloom(sender=user, content=content)
 
     return jsonify(
         {
